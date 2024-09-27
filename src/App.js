@@ -1,8 +1,22 @@
-import { useQuery } from "@tanstack/react-query";
 import "./App.css";
-import axios from "axios";
+import Customers from "./components/Customers";
+import { useState } from "react";
 
 function App() {
+  const [showCustomers, setShowCustomers] = useState(false);
+  return (
+    <div className="App">
+      <button
+        onClick={() => {
+          setShowCustomers(!showCustomers);
+        }}
+      >
+        {showCustomers ? "Hide Customers" : "Show Customers"}
+      </button>
+      {showCustomers ? <Customers /> : null}
+    </div>
+  );
+
   // const priceQuery = useQuery({
   //   queryKey: ["price"],
   //   queryFn: () => {
@@ -12,37 +26,17 @@ function App() {
   //   },
   //   refetchInterval: 1000 * 20,
   // });
-
-  const customerQuery = useQuery({
-    queryKey: ["customers"],
-    queryFn: () => {
-      return axios("http://localhost:3000/api/customers");
-    },
-    staleTime: 1000 * 10,
-    refetchInterval: 1000 * 15,
-  });
-
-  if (customerQuery?.data?.data?.customers) {
-    return (
-      <div className="App">
-        {customerQuery.data.data.customers.map((customer) => {
-          return <p key={customer._id}>{customer.name}</p>;
-        })}
-      </div>
-    );
-  }
-
-  return (
-    <div className="App">
-      {/* {priceQuery?.error ? <p>UH oh! Error...</p> : null}
-      {priceQuery?.isLoading ? <p>Loading...</p> : null}
-      {priceQuery?.data?.data?.bitcoin?.usd ? (
-        priceQuery.data.data.bitcoin.usd
-      ) : (
-        <p>Null</p>
-      )} */}
-    </div>
-  );
+  // return (
+  //   <div className="App">
+  //     {/* {priceQuery?.error ? <p>UH oh! Error...</p> : null}
+  //     {priceQuery?.isLoading ? <p>Loading...</p> : null}
+  //     {priceQuery?.data?.data?.bitcoin?.usd ? (
+  //       priceQuery.data.data.bitcoin.usd
+  //     ) : (
+  //       <p>Null</p>
+  //     )} */}
+  //   </div>
+  // );
 }
 
 export default App;
