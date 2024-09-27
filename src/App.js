@@ -3,33 +3,44 @@ import "./App.css";
 import axios from "axios";
 
 function App() {
-  const priceQuery = useQuery({
-    queryKey: ["price"],
-    queryFn: () => {
-      return axios(
-        "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
-      );
-    },
-    refetchInterval: 1000 * 20,
-  });
+  // const priceQuery = useQuery({
+  //   queryKey: ["price"],
+  //   queryFn: () => {
+  //     return axios(
+  //       "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
+  //     );
+  //   },
+  //   refetchInterval: 1000 * 20,
+  // });
 
   const customerQuery = useQuery({
     queryKey: ["customers"],
     queryFn: () => {
       return axios("http://localhost:3000/api/customers");
     },
-    refetchInterval: 1000 * 20,
+    staleTime: 1000 * 10,
+    refetchInterval: 1000 * 15,
   });
+
+  if (customerQuery?.data?.data?.customers) {
+    return (
+      <div className="App">
+        {customerQuery.data.data.customers.map((customer) => {
+          return <p key={customer._id}>{customer.name}</p>;
+        })}
+      </div>
+    );
+  }
 
   return (
     <div className="App">
-      {priceQuery?.error ? <p>UH oh! Error...</p> : null}
+      {/* {priceQuery?.error ? <p>UH oh! Error...</p> : null}
       {priceQuery?.isLoading ? <p>Loading...</p> : null}
       {priceQuery?.data?.data?.bitcoin?.usd ? (
         priceQuery.data.data.bitcoin.usd
       ) : (
         <p>Null</p>
-      )}
+      )} */}
     </div>
   );
 }
